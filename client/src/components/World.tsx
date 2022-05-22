@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createScene, engine, camera } from '../modules';
 import Characters from '../modules/Characters';
 import {MeshBuilder, Vector3} from '@babylonjs/core';
@@ -16,13 +16,14 @@ declare global {
 
 function World({Engineloaded} : Props) {
   const [load, setLoad] = useState(false);
+  let chracter = useRef<Characters>()
   useEffect(()=> {
     if (!load && Engineloaded) {
       const Engine  = engine;
       // console.log(Engine);
       const Scene = createScene(Engine);
       console.log(Scene);
-      setLoad(true);
+      // setLoad(true);
       Scene?.debugLayer.show();
       Scene?.executeWhenReady(()=> {
         Engine?.runRenderLoop(()=> {
@@ -31,11 +32,22 @@ function World({Engineloaded} : Props) {
       })
       camera?.attachControl(true);
       // const ground = MeshBuilder.CreateGround("ground", {width:10, height:10});
-      const chracter = new Characters("./assets/model/", "GraduatedGom.glb", "npc", Scene);
-      console.log(chracter)
-      chracter.setPotition(new Vector3(0,1,0))
+      chracter.current = new Characters("./assets/model/", "GraduatedGom.glb", "npc", Scene);
+      const importMesh = async () => {
+        await chracter.current?.init(setLoad)
+        // await chracter.current.init(setLoad)
+        // chracter.setPotition(new Vector3(0,1,0))
+      }
+      importMesh()
     }
   }, [load, Engineloaded])
+
+  useEffect(()=> {
+    if (load) {
+      console.log(chracter.current?.meshes)
+      console.log("state 업데이트 됩")
+    }
+  },[load])
   return (
     <></>
   );

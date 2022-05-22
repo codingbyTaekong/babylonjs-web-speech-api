@@ -22,28 +22,18 @@ class Characters {
         this.scene = scene;
         this.sceneFilename = sceneFilename
         this.position = new Vector3(0,0,0)
-        // const loadAsset = async () => {
-        //     await SceneLoader.LoadAssetContainerAsync(this.rootUrl, this.sceneFilename, this.scene, (e)=> {
-        //         console.log(e)
-        //     })
-        // }
-        SceneLoader.LoadAssetContainerAsync(this.rootUrl, this.sceneFilename, this.scene, (e)=> {
-            console.log(e)
-        }).then(container => {
-            this.meshes = container.meshes[0]
-        })
-        // this.meshes = await SceneLoader.LoadAssetContainerAsync(this.rootUrl, this.sceneFilename, this.scene)
-        // console.log(loadAsset)
-
-        // (result : AssetContainer) => {
-        //     console.log("로딩완료")
-        //     this.meshes = result.meshes[0]
-        //     result.meshes[0].position = this.position
-        //     result.meshes[0].name = this.name
-        //     result.meshes[0].scaling = new Vector3(1, 1, 1);
-        //     result.addAllToScene();
-        // }
     }
+   async init(stateFc : React.Dispatch<React.SetStateAction<boolean>>) {
+        SceneLoader.LoadAssetContainer(this.rootUrl, this.sceneFilename, this.scene, (result : AssetContainer) => {
+            console.log("로딩완료")
+            this.meshes = result.meshes[0]
+            result.meshes[0].position = this.position
+            result.meshes[0].name = this.name
+            result.meshes[0].scaling = new Vector3(1, 1, 1);
+            result.addAllToScene();
+            stateFc(true);
+        })
+   }
     setPotition(position : Vector3) {
         this.position = position;
         console.log(this.meshes);
