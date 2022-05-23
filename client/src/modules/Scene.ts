@@ -1,7 +1,7 @@
 import {Scene as BABYLONE_SCENE, Scene, SceneOptions, Engine, Color4, Vector3, ArcRotateCamera, FreeCamera, HemisphericLight} from '@babylonjs/core';
 
-export let scene : undefined | BABYLONE_SCENE = undefined;
-export let camera : undefined | FreeCamera
+export let scene : BABYLONE_SCENE;
+export let camera : FreeCamera
 export const createScene = (engine?: Engine, options?: SceneOptions) => {
     if (engine) {
         scene = new Scene(engine, options)

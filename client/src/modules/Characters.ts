@@ -14,7 +14,7 @@ class Characters {
     name : string;
     sceneFilename : string;
     scene : undefined | Scene;
-    meshes : any;
+    meshes : undefined | AbstractMesh;
     position : Vector3
     constructor (rootUrl : string, sceneFilename: string, meshName : string, scene ?: Scene) {
         this.rootUrl = rootUrl;
