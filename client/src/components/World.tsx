@@ -23,18 +23,11 @@ function World({Engineloaded} : Props) {
     if (!load && Engineloaded) {
       Engine.current = engine;
       Scene.current = createScene(Engine.current);
-      // const Engine  = engine;
-      // const Scene = createScene(Engine);
-      console.log(Scene.current);
-      // // setLoad(true);
       Scene.current?.debugLayer.show();
       Scene.current?.executeWhenReady(()=> {
         Engine.current?.runRenderLoop(()=> {
           Scene.current?.render();
         })
-        // Engine.current.runRenderLoop(()=> {
-        //   Scene.current.render();
-        // })
       })
       // camera?.attachControl(true);
       // const ground = MeshBuilder.CreateGround("ground", {width:10, height:10});
