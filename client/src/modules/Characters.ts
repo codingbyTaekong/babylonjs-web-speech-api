@@ -34,6 +34,10 @@ class Characters {
             stateFc(true);
         })
    }
+   async main () {
+    // var helper = this.scene?.createDefaultVRExperience();
+    await SceneLoader.AppendAsync("https://playground.babylonjs.com/scenes/", "skull.babylon", this.scene);
+};
     setPotition(position : Vector3) {
         this.position = position;
         console.log(this.meshes);

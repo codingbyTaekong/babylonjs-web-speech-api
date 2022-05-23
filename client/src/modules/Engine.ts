@@ -8,6 +8,6 @@ export const createEngine = (canvas : HTMLCanvasElement, isIos ?: boolean, optio
 }
 
 export const removeEngine = () => {
-    engine?.stopRenderLoop();
-    engine?.dispose()
+    engine.stopRenderLoop();
+    engine.dispose()
 }
