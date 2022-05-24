@@ -4,6 +4,7 @@ import Characters from '../modules/Characters';
 import {MeshBuilder, Vector3, Engine, Scene} from '@babylonjs/core';
 
 import '@babylonjs/inspector'
+import Items from '../modules/Items';
 
 interface Props {
   Engineloaded : boolean
@@ -18,34 +19,38 @@ function World({Engineloaded} : Props) {
   const [load, setLoad] = useState(false);
   let chracter = useRef<Characters>()
   let Engine = useRef<Engine>()
+  let items = useRef<Items>()
   let Scene = useRef<Scene>()
+  useEffect(()=> {
+    return () => {
+      chracter.current?.dispose();
+    }
+  },[])
   useEffect(()=> {
     if (!load && Engineloaded) {
       Engine.current = engine;
       Scene.current = createScene(Engine.current);
       Scene.current?.debugLayer.show();
       Scene.current?.executeWhenReady(()=> {
+        setLoad(true)
         Engine.current?.runRenderLoop(()=> {
           Scene.current?.render();
         })
       })
-      // camera?.attachControl(true);
-      // const ground = MeshBuilder.CreateGround("ground", {width:10, height:10});
-      // chracter.current = new Characters("./assets/model/", "GraduatedGom.glb", "npc", Scene);
-      // chracter.current.main()
-      // const importMesh = async () => {
-      //   await chracter.current?.init(setLoad)
-      //   // await chracter.current.init(setLoad)
-      //   // chracter.setPotition(new Vector3(0,1,0))
-      // }
-      // importMesh()
     }
   }, [load, Engineloaded])
 
   useEffect(()=> {
     if (load) {
-      console.log(chracter.current?.meshes)
-      console.log("state 업데이트 됩")
+      const importMesh = async () => {
+        if (Scene.current) {
+          chracter.current = new Characters("./assets/model/", "Avatar_Body.glb", "playerBody", Scene.current);
+          items.current = new Items("./assets/model/", "Avatar_Item2.glb", "items", Scene.current)
+          await chracter.current.init().then(container => console.log(container))
+          await items.current.init().then(container => console.log(container.meshes[0].getChildren()[0].id))
+        }
+      }
+      importMesh()
     }
   },[load])
   return (

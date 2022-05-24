@@ -8,8 +8,8 @@ export const createScene = (engine?: Engine, options?: SceneOptions) => {
         camera = new FreeCamera("MainCamera",new Vector3(-0.11,1.31,-2.31), scene);
         camera.rotation = new Vector3(12.64,-4.69,0);
         camera.setTarget(new Vector3(-0.80,-0.58,6.11))
-        camera.attachControl(false);
-        camera.speed = 0
+        // camera.attachControl(false);
+        // camera.speed = 0
         // scene.clearColor = new Color4(0, 0, 0, 0);
         var light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
     }
