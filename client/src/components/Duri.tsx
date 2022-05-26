@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { createScene, engine, camera } from '../modules';
+import { createScene, engine} from '../modules';
 import Characters from '../modules/Characters';
-import { MeshBuilder, Vector3, Engine, Scene, TransformNode } from '@babylonjs/core';
+import {  Vector3, Engine, Scene, Vector2} from '@babylonjs/core';
 import "@babylonjs/loaders";
 
 import '@babylonjs/inspector'
 import Items from '../modules/Items';
 import Player from '../modules/Player';
+import MyMap from '../modules/Map';
 
 interface Props {
   Engineloaded : boolean
@@ -23,9 +24,15 @@ function Duri({Engineloaded} : Props) {
   let Engine = useRef<Engine>()
   let items = useRef<Items>()
   let Scene = useRef<Scene>()
+
+  let MyPlayer = useRef<Player>()
+  let map = useRef<MyMap>();
   useEffect(()=> {
     return () => {
+      items.current?.container?.dispose()
+      map.current?.container.dispose()
       chracter.current?.dispose();
+      MyPlayer.current?.dispose();
     }
   },[])
   useEffect(()=> {
@@ -46,8 +53,18 @@ function Duri({Engineloaded} : Props) {
     if (load) {
       const Main = async () => {
         if (Scene.current) {
+          // 캐릭터
           chracter.current = new Characters(Scene.current);
-          items.current = new Items("./assets/model/", "Avatar_Item2.glb", "items", Scene.current)
+          // 아이템 꾸러미
+          items.current = new Items("./assets/model/", "Avatar_Item2.glb", "items", Scene.current);
+          // 맵
+          map.current = new MyMap(Scene.current);
+          await map.current.init("./assets/model/", "duri_Map.glb", "duriMap").then(async (container) => {
+            map.current?.createPipLine()
+            await map.current?.createWaterMaterial("waterMaterial", new Vector2(512,512));
+            map.current?.createSkyBox();
+          })
+
           await chracter.current.init("./assets/model/", "Avatar_Body.glb", "playerBody")
           await items.current.init().then(container => {
             const TransformNodes = {
@@ -62,12 +79,11 @@ function Duri({Engineloaded} : Props) {
             }
             container.setParent(TransformNodes)
             if (Scene.current && chracter.current?.container) {
-              const myPlayer = new Player("myPlayer", "taeho" , Scene.current, chracter.current?.container, new Vector3(1,0,1), new Vector3(0,Math.PI, 0));
-              myPlayer.setItmes(currentItems, TransformNodes);
+              MyPlayer.current = new Player("myPlayer", "taeho" , Scene.current, chracter.current?.container, new Vector3(0,0,0), new Vector3(0,Math.PI, 0));
+              MyPlayer.current.setItmes(currentItems, TransformNodes);
             }
-
-
           })
+          
         }
       }
       Main()

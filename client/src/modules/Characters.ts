@@ -16,8 +16,8 @@ class Characters {
     hiarTransformNode : TransformNode;
     clothesTransformNode : TransformNode;
     shoesTransformNode : TransformNode;
-    skeletons : Skeleton;
-    container : undefined | AssetContainer;
+    skeletons !: Skeleton;
+    container !:  AssetContainer;
     constructor (scene : Scene) {
         this.scene = scene;
         this.meshes = MeshBuilder.CreateBox("empthBox");
@@ -28,13 +28,10 @@ class Characters {
         this.hiarTransformNode = new TransformNode("hair_transformNode", this.scene);
         this.clothesTransformNode = new TransformNode("clothes_transformNode", this.scene);
         this.shoesTransformNode = new TransformNode("shoes_transformNode", this.scene);
-        this.skeletons = new Skeleton("emptySkeleton", 'emptySkeleton', this.scene);
     }
     async init(rootUrl : string,sceneFilename : string , name : string) {
         let container = await SceneLoader.LoadAssetContainerAsync(rootUrl, sceneFilename,  this.scene);
-        console.log(container.materials)
         container.materials.map((mat : Material, index : number) => {
-            console.log(mat.name)
             if (mat.name === "M_Avatar_Main") mat.transparencyMode = 0
         })
         // container.materials[0].transparencyMode = 0
@@ -46,7 +43,6 @@ class Characters {
         container.meshes[0].position = this.position;
         container.meshes[0].rotation = this.rotation;
         container.meshes[0].scaling = new Vector3(1, 1, 1);
-        this.skeletons.dispose();
         this.skeletons = container.skeletons[0];
         if (container.animationGroups.length !== 0) container.animationGroups[0].stop();
         container.addAllToScene()

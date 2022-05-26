@@ -2,6 +2,8 @@
 export * from './Engine';
 export * from './Scene';
 export * from './Characters'
+export * from "./Player"
+export * from "./Map"
 
 // // import * as BABYLON from '@babylonjs/core';
 // import {Engine, Scene, RecastJSPlugin} from '@babylonjs/core';

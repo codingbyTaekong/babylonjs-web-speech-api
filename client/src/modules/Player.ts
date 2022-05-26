@@ -26,10 +26,15 @@ class Player {
         this.clonedContainer = originContainer.instantiateModelsToScene()
         this.skeletons = this.clonedContainer.skeletons[0];
         this.skeletons.name = `${id}_skeletons`
-        this.clonedContainer.rootNodes[0].isEnabled(true);
+        // console.log(this.clonedContainer.rootNodes[0].en)
+        this.clonedContainer.rootNodes[0].setEnabled(true);
+        this.clonedContainer.rootNodes[0].getChildMeshes().forEach(mesh => {
+            mesh.setEnabled(true)
+            mesh.isVisible = true
+        });
         this.clonedContainer.rootNodes[0].name = `${id}_playerBody`
-        this.clonedContainer.rootNodes[0].position = this.position
-        this.clonedContainer.rootNodes[0].rotation = this.rotation
+        this.clonedContainer.rootNodes[0].position = this.position;
+        this.clonedContainer.rootNodes[0].rotation = this.rotation;
     }
     setItmes(items : Items, itemsNodes : transformNodes) {
         const {hair, clothes, shoes} = itemsNodes;
@@ -158,6 +163,11 @@ class Player {
             // }
 
         // }
+    }
+    dispose() {
+        this.clonedContainer.rootNodes[0].dispose()
+        this.clonedContainer.animationGroups[0].dispose()
+        this.clonedContainer.skeletons[0].dispose()
     }
 }
 
